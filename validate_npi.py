@@ -25,7 +25,6 @@ def validate_npi(npi):
             valid = check_digit == last_digit
         else:
             print('[Wrong input]: Number should have 10 digits')
-    # print(data_type)
     if not (data_type is int or data_type is str):
         print('[Wrong input]: Input is not of the required type')
 
@@ -56,14 +55,12 @@ def calculate_sum(npi: int) -> int:
         even_digit = npi % 10  # gets every second digit going from rtl
         npi = npi // 10  # discard stored digit
         even_digit *= 2  # double the digit
-        # print(every_second)
         # check if product greater than 9
         if even_digit > 9:
             # doubling a single digit would always result in at most a two digit number.
             # Using modulo and integer division to get the unit's and ten's value respectively
             even_digit = even_digit % 10 + even_digit // 10
         odd_digit = npi % 10
-        # print(f'even: {even_digit}; odd: {odd_digit}')
         npi = npi // 10  # discard the stored number
         sum_digits = sum_digits + even_digit + odd_digit  # calculate the sum
     return sum_digits
