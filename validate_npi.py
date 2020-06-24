@@ -83,29 +83,34 @@ def checksum(num: int) -> int:
 
 
 def test_suite(tests):
-    result = ('FAILED', 'PASSED',)
+    result = ('FAILED :(', 'PASSED :)',)
     passes = 0
     fails = 0
     num_tests = len(tests)
     for count, test in enumerate(tests):
         print(f'Running test {count + 1} {40 * "."}')
-        passed = validate_npi(test[0]) == test[1]
+        outcome = validate_npi(test[0])
+        passed = outcome == test[1]
         if passed:
             passes += 1
         else:
             fails += 1
-        print(f'[{result[passed]}]: {test[2]} -> {test[0]}')
-        print(f'{80 * "+"}')
+        print(f'{test[2]} -> {test[0]}')
+        print(f'[{result[passed]}]: Expected - {test[1]} | Outcome - {outcome}')
+        print(f'{70 * "+"}')
 
-    print('\nSummary')
-    print(80 * '-')
+    print('\nTest Summary')
+    print(70 * '-')
     print(f'Run {num_tests} test cases')
     print(f'{passes}/{num_tests} cases passed' * (passes > 0))
     print(f'{fails}/{num_tests} cases failed' * (fails > 0))
 
 
 if __name__ == '__main__':
-    test_cases = [(1245319599, True, 'Testing valid npi integer'), ('1234567893', True, 'Testing valid npi string'),
+    test_cases = [(1245319599, True, 'Testing valid npi integer'),
+                  ('1234567893', True, 'Testing valid npi string'),
+                  (1245319594, False, 'Testing npi integer with invalid check digit'),
+                  ('1234567890', False, 'Testing npi string with invalid check digit'),
                   (1212343, False, 'Testing integer with less than 10 digits'),
                   ('23577986', False, 'Testing string with less than 10 digits'),
                   (75435678744567, False, 'Testing integer with more than 10 digits'),
