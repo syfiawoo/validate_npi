@@ -1,8 +1,5 @@
 def validate_npi(npi):
-    const = 24
     valid = False  # assume in the beginning that number hasn't been validated
-    sum_digits = 0
-    last_digit = -1
     data_type = type(npi)
     # check what datatype npi is
     if data_type is str:
@@ -13,27 +10,6 @@ def validate_npi(npi):
             try:
                 npi = int(npi)
                 data_type = type(npi)  # update the datatype after successful conversion
-                # last_digit = int(npi[-1])  # store the last digit
-                # index = -len(npi)  # last number using negative indexing rtl
-                # for i in range(-2, index - 1, -2):
-                #     even_digit = int(npi[i]) * 2  # get every second digit rtl
-                #     # if even_digit is greater than 10
-                #     # add up the individual digits
-                #     if even_digit > 9:
-                #         even_digit = even_digit % 10 + even_digit // 10
-                #     odd_digit = 0
-                #     # check bounds
-                #     if i - 1 >= index:
-                #         # current index within bounds
-                #         odd_digit = int(npi[i-1])  # get number at index
-                #     sum_digits = sum_digits + even_digit + odd_digit  # add up all the digits
-                #     print(f'even: {even_digit}; odd: {odd_digit}')
-                # print(sum_digits)
-                # sum_digits += const
-                # unit = sum_digits % 10
-                # check_digit = 0
-                # if unit > 0:
-                #     check_digit = 10 - unit
             except ValueError:
                 print('[Wrong input]: Could not convert to integer')
         else:
@@ -44,31 +20,15 @@ def validate_npi(npi):
         if count_digits(npi) == 10:
             last_digit = npi % 10  # store the check digit (last digit from ltr)
             npi = npi // 10  # discard the last digit
-            while npi > 0:
-                even_digit = npi % 10  # gets every second digit going from rtl
-                npi = npi // 10
-                even_digit *= 2
-                # print(every_second)
-                if even_digit > 9:
-                    even_digit = even_digit % 10 + even_digit // 10
-                odd_digit = npi % 10
-                # print(f'even: {even_digit}; odd: {odd_digit}')
-                npi = npi // 10
-                sum_digits = sum_digits + even_digit + odd_digit
-            # print(sum_digits)
-            # sum_digits += const
-            # unit = sum_digits % 10
-            # check_digit = 0
-            # if unit > 0:
-            #     check_digit = 10 - unit
-            # valid = check_digit == last_digit
+            sum_digits = calculate_sum(npi)
+            check_digit = checksum(sum_digits)
+            valid = check_digit == last_digit
         else:
             print('[Wrong input]: Number should have 10 digits')
     # print(data_type)
     if not (data_type is int or data_type is str):
         print('[Wrong input]: Input is not of the required type')
-    check_digit = checksum(sum_digits)
-    valid = check_digit == last_digit
+
     return valid
 
 
@@ -88,6 +48,25 @@ def count_digits(num: int) -> int:
         num_digits += 1
         num = num // 10  # integer divide to get rid of the last digit
     return num_digits
+
+
+def calculate_sum(npi: int) -> int:
+    sum_digits = 0
+    while npi > 0:
+        even_digit = npi % 10  # gets every second digit going from rtl
+        npi = npi // 10  # discard stored digit
+        even_digit *= 2  # double the digit
+        # print(every_second)
+        # check if product greater than 9
+        if even_digit > 9:
+            # doubling a single digit would always result in at most a two digit number.
+            # Using modulo and integer division to get the unit's and ten's value respectively
+            even_digit = even_digit % 10 + even_digit // 10
+        odd_digit = npi % 10
+        # print(f'even: {even_digit}; odd: {odd_digit}')
+        npi = npi // 10  # discard the stored number
+        sum_digits = sum_digits + even_digit + odd_digit  # calculate the sum
+    return sum_digits
 
 
 def checksum(num: int) -> int:
